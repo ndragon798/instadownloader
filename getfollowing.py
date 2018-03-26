@@ -2,17 +2,10 @@
 import os
 from instaLooter import InstaLooter
 import time
+import getpass
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-
-def loadlogins():
-	with open('users.txt', 'r') as fp:
-		lines = fp.readlines()
-		# print(lines)
-		username_ = str(lines[0]).strip()
-		password_ = str(lines[1]).strip()
-		return username_, password_
 
 def scrolldown():
 	webdriver.ActionChains(driver).send_keys(Keys.PAGE_DOWN).perform()
@@ -22,9 +15,8 @@ def scrolldown():
 	print(len(driver.find_elements_by_tag_name("li")))
 	return len(driver.find_elements_by_tag_name("li"))
 
-username_ = None
-password_ = None
-username_, password_ = loadlogins()
+username_ = input("Please Input Username: ").strip()
+password_ = getpass.getpass("Please Input Password: ").strip()
 
 
 # Optional argument, if not specified will search path.
@@ -65,12 +57,17 @@ img=driver.find_elements_by_xpath("//a/img")
 for i in atext:
 	print(i.text)
 	followinglist.append(i.text)
+ThumbsFilePath='./thumbs/'
+if not os.path.exists(ThumbsFilePath):
+    os.makedirs(ThumbsFilePath)
+UserFilePath='./users/'
+if not os.path.exists(UserFilePath):
+	os.makedirs(UserFilePath)
 img_src=[]
 for i in range(0,len(img)):
 	img_src.append(img[i].get_attribute('src'))
 	print(img_src)
-	os.system('wget -q -O ./thumbs/'+followinglist[i]+'.jpg '+img_src[i]+' &')
-	# os.system('wget -q -O -P ./thumbs/'+i+' &')
+	os.system('wget -q -O '+ThumbsFilePath+followinglist[i]+'.jpg '+img_src[i]+' &')
 driver.quit()
 for i in followinglist:
 
@@ -89,7 +86,7 @@ for i in followinglist:
 			url = media['display_url']
 		# print(url)
 		if url[-2:] != '.1':
-			with open("test/"+i, "a") as output:
+			with open(UserFilePath+i, "a") as output:
 				output.write("{}\n".format(url))
 	time.sleep(2.5)
-	os.system('wget -q -i ./test/'+i+' -P ./test/'+i+' &')
+	os.system('wget -q -i '+UserFilePath+i+' -P '+UserFilePath+i+' &')
