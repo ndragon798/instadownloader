@@ -20,7 +20,12 @@ password_ = getpass.getpass("Please Input Password: ").strip()
 
 
 # Optional argument, if not specified will search path.
-driver = webdriver.Chrome('./chromedriver')
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('headless')
+
+driver = webdriver.Chrome('./chromedriver',chrome_options=chrome_options)
+# driver = webdriver.Chrome('./chromedriver')
 driver.get('https://www.instagram.com/accounts/login/')
 # time.sleep(5) # Let the user actually see something!
 username_box = driver.find_element_by_name('username')
