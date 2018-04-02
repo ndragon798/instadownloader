@@ -1,0 +1,2 @@
+-e git://github.com/althonos/InstaLooter.git#egg=InstaLooter
+Selenium >=3.9.0
