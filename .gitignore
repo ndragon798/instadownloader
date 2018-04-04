@@ -104,6 +104,9 @@ venv.bak/
 
 # End of https://www.gitignore.io/api/python
 
+#Instalooter install folder
+/src
+
 #Pictures and videos
 /thumbs
 /users
