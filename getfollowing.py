@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 import os
-from instaLooter import InstaLooter
+from instalooter.looters import ProfileLooter
 import time
 import getpass
 from selenium import webdriver
@@ -32,7 +32,7 @@ username_box = driver.find_element_by_name('username')
 username_box.send_keys(username_)
 password_box = driver.find_element_by_name('password')
 password_box.send_keys(password_)
-InstaLooter().login(username_, password_)
+
 
 password_box.submit()
 time.sleep(5)
@@ -74,12 +74,13 @@ for i in range(0,len(img)):
 	print(img_src)
 	os.system('wget -q -O '+ThumbsFilePath+followinglist[i]+'.jpg '+img_src[i]+' &')
 driver.quit()
+looter=ProfileLooter("instagram")
+looter.login(username_,password_)
 for i in followinglist:
 
 	print(i)
 	i = i.strip()
-	looter = InstaLooter(profile=i, get_videos=True)
-	# print(looter.medias)
+	looter=ProfileLooter(i)
 	for media in looter.medias():
 
 		if media['is_video']:
@@ -90,7 +91,7 @@ for i in followinglist:
 			# print(media)
 			url = media['display_url']
 		# print(url)
-		if url[-2:] != '.1':
+		if url.strip()[-2:] != '.1':
 			with open(UserFilePath+i, "a") as output:
 				output.write("{}\n".format(url))
 	time.sleep(2.5)

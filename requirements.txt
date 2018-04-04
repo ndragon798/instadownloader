@@ -1,2 +1,2 @@
--e git://github.com/althonos/InstaLooter.git#egg=InstaLooter
+-e git://github.com/althonos/InstaLooter.git#egg=Instalooter
 Selenium >=3.9.0
