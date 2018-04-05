@@ -1,8 +1,8 @@
 #! /usr/bin/python3
 import os
-from instalooter.looters import ProfileLooter
 import time
 import getpass
+from instalooter.looters import ProfileLooter
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -87,7 +87,6 @@ driver.quit()
 #Login into instagram
 looter=ProfileLooter("instagram")
 looter.login(username_,password_)
-
 #Loop through all the people who are being followed and grab their photo urls
 for i in followinglist:
 
@@ -97,14 +96,13 @@ for i in followinglist:
 	for media in looter.medias():
 
 		if media['is_video']:
-			pass
-			# print(media)
-			# url = looter.get_post_info(media['code'])['video_url']
+			url = looter.get_post_info(media['shortcode'])['video_url']
+			print(url)
 		else:
 			# print(media)
 			url = media['display_url']
 			# print(url)
-		if url.strip()[-2:] != '.1':
+		if '.jpg.' not in url.strip():
 			with open(UserFilePath+i, "a") as output:
 				#Output the file urls to wget-able format
 				output.write("{}\n".format(url))
