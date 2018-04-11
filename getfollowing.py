@@ -7,6 +7,18 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
+def instalinks(media, looter):
+    if media.get('__typename') == "GraphSidecar":
+        media = looter.get_post_info(media['shortcode'])
+        nodes = [e['node'] for e in media['edge_sidecar_to_children']['edges']]
+        return [n.get('video_url') or n.get('display_url') for n in nodes]
+    elif media['is_video']:
+        media = looter.get_post_info(media['shortcode'])
+        return [media['video_url']]
+    else:
+        return [media['display_url']]
+
+
 def scrolldown():
 	webdriver.ActionChains(driver).send_keys(Keys.PAGE_DOWN).perform()
 	time.sleep(1)
@@ -87,25 +99,19 @@ driver.quit()
 #Login into instagram
 looter=ProfileLooter("instagram")
 looter.login(username_,password_)
+followinglist=['katie_len22']
 #Loop through all the people who are being followed and grab their photo urls
 for i in followinglist:
 
 	print(i)
 	i = i.strip()
 	looter=ProfileLooter(i)
-	for media in looter.medias():
-
-		if media['is_video']:
-			url = looter.get_post_info(media['shortcode'])['video_url']
-			print(url)
-		else:
-			# print(media)
-			url = media['display_url']
-			# print(url)
-		if '.jpg.' not in url.strip():
-			with open(UserFilePath+i, "a") as output:
-				#Output the file urls to wget-able format
-				output.write("{}\n".format(url))
+	with open(UserFilePath+i, "a") as output:
+		for media in looter.medias():
+			for link in instalinks(media,looter):
+				print(link)
+				output.write("{}\n".format(link))
+	#Try and not get rate limited by instagram
 	time.sleep(4)
 	#Wget from the file
 	os.system('wget -q -i '+UserFilePath+i+' -P '+UserFilePath+i+' &')
