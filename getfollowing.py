@@ -33,10 +33,10 @@ password_ = getpass.getpass("Please Input Password: ").strip()
 
 # Optional argument, if not specified will search path.
 #Setup headless chrome for selenium
-# chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument('headless')
-driver=webdriver.Chrome('./chromedriver')
-# driver = webdriver.Chrome('./chromedriver',chrome_options=chrome_options)
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('headless')
+# driver=webdriver.Chrome('./chromedriver')
+driver = webdriver.Chrome('./chromedriver',chrome_options=chrome_options)
 #Load login page
 driver.get('https://www.instagram.com/accounts/login/')
 # Type in login 
