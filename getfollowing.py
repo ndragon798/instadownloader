@@ -99,7 +99,6 @@ driver.quit()
 #Login into instagram
 looter=ProfileLooter("instagram")
 looter.login(username_,password_)
-followinglist=['katie_len22']
 #Loop through all the people who are being followed and grab their photo urls
 for i in followinglist:
 
