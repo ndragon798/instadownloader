@@ -2,6 +2,7 @@
 import os
 import time
 import getpass
+from random import randint
 from instalooter.looters import ProfileLooter
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -26,6 +27,7 @@ def scrolldown():
 	time.sleep(1)
 	# print(len(driver.find_elements_by_tag_name("li")))
 	return len(driver.find_elements_by_tag_name("li"))
+
 #Read in username and password for instagram
 username_ = input("Please Input Username: ").strip()
 password_ = getpass.getpass("Please Input Password: ").strip()
@@ -106,12 +108,15 @@ for i in followinglist:
 	print(i)
 	i = i.strip()
 	looter=ProfileLooter(i)
-	with open(UserFilePath+i, "a") as output:
+	with open(UserFilePath+i+".txt", "a") as output:
 		for media in looter.medias():
 			for link in instalinks(media,looter):
-				print(link)
-				output.write("{}\n".format(link))
+				if not (os.path.isfile(UserFilePath+i+"/"+link.split('/')[-1])):
+					print(link)
+					output.write("{}\n".format(link))
+				else:
+					print("Image already exists")
 	#Try and not get rate limited by instagram
-	time.sleep(4)
+	time.sleep(randint(5,10))
 	#Wget from the file
-	os.system('wget -q -i '+UserFilePath+i+' -P '+UserFilePath+i+' &')
+	os.system('(wget -q -i '+UserFilePath+i+".txt"+' -P '+UserFilePath+i+';rm '+UserFilePath+i+".txt"') &')
