@@ -104,19 +104,21 @@ looter=ProfileLooter("instagram")
 looter.login(username_,password_)
 #Loop through all the people who are being followed and grab their photo urls
 for i in followinglist:
-
-	print(i)
-	i = i.strip()
-	looter=ProfileLooter(i)
-	with open(UserFilePath+i+".txt", "a") as output:
-		for media in looter.medias():
-			for link in instalinks(media,looter):
-				if not (os.path.isfile(UserFilePath+i+"/"+link.split('/')[-1])):
-					print(link)
-					output.write("{}\n".format(link))
-				else:
-					print("Image already exists")
-	#Try and not get rate limited by instagram
-	time.sleep(randint(5,10))
-	#Wget from the file
-	os.system('(wget -q -i '+UserFilePath+i+".txt"+' -P '+UserFilePath+i+';rm '+UserFilePath+i+".txt"') &')
+	try:
+		print(i)
+		i = i.strip()
+		looter=ProfileLooter(i)
+		with open(UserFilePath+i+".txt", "a") as output:
+			for media in looter.medias():
+				for link in instalinks(media,looter):
+					if not (os.path.isfile(UserFilePath+i+"/"+link.split('/')[-1])):
+						print(link)
+						output.write("{}\n".format(link))
+					else:
+						print("Image already exists")
+		#Try and not get rate limited by instagram
+		time.sleep(randint(5,10))
+		#Wget from the file
+		os.system('(wget -q -i '+UserFilePath+i+".txt"+' -P '+UserFilePath+i+';rm '+UserFilePath+i+".txt"') &')
+	except Exception as e:
+		print("Error: "+ e)
