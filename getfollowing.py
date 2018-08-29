@@ -37,8 +37,8 @@ password_ = getpass.getpass("Please Input Password: ").strip()
 #Setup headless chrome for selenium
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('headless')
-# driver=webdriver.Chrome('./chromedriver')
-driver = webdriver.Chrome('./chromedriver',chrome_options=chrome_options)
+driver = webdriver.Chrome('./chromedriver')
+# driver = webdriver.Chrome('./chromedriver',chrome_options=chrome_options)
 #Load login page
 driver.get('https://www.instagram.com/accounts/login/')
 # Type in login 
@@ -74,6 +74,8 @@ while (asdf != asdfprevious):
 	asdfprevious = asdf
 	asdf = scrolldown()
 	print(asdf, asdfprevious)
+	time.sleep(10)
+	asdf=scrolldown()
 followinglist = []
 #Grab all user names and images
 atext = driver.find_elements_by_xpath("//li/div/div/div/div/a")
@@ -116,9 +118,14 @@ for i in followinglist:
 						output.write("{}\n".format(link))
 					else:
 						print("Image already exists")
-		#Try and not get rate limited by instagram
-		time.sleep(randint(5,10))
 		#Wget from the file
 		os.system('(wget -q -i '+UserFilePath+i+".txt"+' -P '+UserFilePath+i+';rm '+UserFilePath+i+".txt"') &')
+		#Try and not get rate limited by instagram
+		rnd=randint(110,147)
+		print("Waiting for:",str(rnd),"seconds")
+		time.sleep(rnd)
 	except Exception as e:
-		print("Error: "+ e)
+		print("Rate limited on",i,"waiting for 2 minutes before restarting with next user this user has been added to the back of the line")
+		followinglist.append(i)
+		print("Waiting for:",str(120))
+		time.sleep(120)
